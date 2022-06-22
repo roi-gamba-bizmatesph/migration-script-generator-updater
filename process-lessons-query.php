@@ -18,6 +18,7 @@
     DB::$user     = 'bizmates';
     DB::$password = 'Bizmates2016!';
     DB::$dbName   = 'bizmates_new';
+    DB::$encoding = 'utf8';
 
     if(isset($_POST['submit'])):
 
@@ -530,7 +531,7 @@
         <br/>
         <br/>
         <label>
-            <input type="checkbox" class="form-check-input" name="saveToDB" value="<?= $saveToDB; ?>">
+            <input type="checkbox" class="form-check-input" name="saveToDB" value="1" <?= $saveToDB ? 'checked' : ''; ?>>
             Save to DB. <i>(After clicking submit, the generated MySQL script will automically be executed in the VM database)</i>
         </label>
         <br/>
