@@ -485,6 +485,8 @@
         <input type="hidden" name="submit" value='true'>
         <label for="">Select Level:</label>
         <select name="level" id="">
+            <option value="0" <?= $level == '0' ? 'selected' : ''; ?>>0</option>
+            <option value="1" <?= $level == '1' ? 'selected' : ''; ?>>1</option>
             <option value="2" <?= $level == '2' ? 'selected' : ''; ?>>2</option>
             <option value="3" <?= $level == '3' ? 'selected' : ''; ?>>3</option>
             <option value="4" <?= $level == '4' ? 'selected' : ''; ?>>4</option>
