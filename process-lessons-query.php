@@ -8,7 +8,16 @@
     $lessonStart    = '1';
     $lessonEnd      = '1';
     $lessonLocation = '';
+    $lessonStartOrig= '1';
+    $saveToDB       = 0;
     
+    require_once 'vendor/autoload.php';
+
+    //DB SETUP
+    DB::$host     = '192.168.56.103';
+    DB::$user     = 'bizmates';
+    DB::$password = 'Bizmates2016!';
+    DB::$dbName   = 'bizmates_new';
 
     if(isset($_POST['submit'])):
 
@@ -362,11 +371,13 @@
             return json_decode($working);
         }
 
-        $level          = $_POST['level'];
-        $rank           = $_POST['rank'];
-        $lessonStart    = $_POST['from'];
-        $lessonEnd      = $_POST['to'];
-        $lessonLocation = $_POST['directory'];
+        $level           = $_POST['level'];
+        $rank            = $_POST['rank'];
+        $lessonStart     = $_POST['from'];
+        $lessonEnd       = $_POST['to'];
+        $lessonLocation  = $_POST['directory'];
+        $saveToDB        = $_POST['saveToDB'];
+        $lessonStartOrig = $lessonStart;
 
         // RANKS BRACKETS
         $rankBrackets  = ['A'=>0,'B'=>20,'C'=>40,'D'=>60,'E'=>80];
@@ -442,13 +453,21 @@
             
             
             $updateQuery .= "#Lesson {$lessonSearcher}\n";
-            $updateQuery .= "UPDATE mst_lesson_html SET content = '{$minifiedEncodedHTML}', css = '{$minifiedCSS}' where rank_id = {$rankId} AND lesson_id = {$lessonID}; \n\n";
-            
+            $updateQuery .= "UPDATE mst_lesson_html SET content = '{$minifiedEncodedHTML}', css = '{$minifiedCSS}' where rank_id = {$rankId} AND lesson_id = {$lessonID};";
+
+            if($saveToDB):
+                DB::query($updateQuery);
+            endif;
+
+            $updateQuery .= "\n\n";
+   
         endfor;
 
         fwrite($fp, $updateQuery); 
         fclose($fp); 
     endif;
+
+    
 ?>
 
 
@@ -487,7 +506,7 @@
                 $inc = 1;
                 for($inc; $inc <= 20; $inc++):
                     ?>
-                        <option value="<?= $inc; ?>" <?= $lessonStart == $inc ? 'selected' : ''; ?>><?= $inc; ?></option>
+                        <option value="<?= $inc; ?>" <?= $lessonStartOrig == $inc ? 'selected' : ''; ?>><?= $inc; ?></option>
                     <?php
                 endfor;
             ?>
@@ -506,6 +525,12 @@
         <label for="">MyStage Directory:</label>
         <input type="text" name="directory" value="<?= isset($lessonLocation) ? $lessonLocation : ''?>">
         <i>ex. C:\Users\RoiMark.Gamba\Desktop\MyStage\mystage-pdf-to-html</i>
+        <br/>
+        <br/>
+        <label>
+            <input type="checkbox" class="form-check-input" name="saveToDB" value="<?= $saveToDB; ?>">
+            Save to DB. <i>(After clicking submit, the generated MySQL script will automically be executed in the VM database)</i>
+        </label>
         <br/>
         <br/>
         <input type="submit" value="Submit">
