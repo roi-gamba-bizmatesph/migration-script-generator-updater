@@ -379,12 +379,13 @@
         $lessonLocation  = $_POST['directory'];
         $saveToDB        = $_POST['saveToDB'];
         $lessonStartOrig = $lessonStart;
+        $updateQuery     = "";
 
         // RANKS BRACKETS
         $rankBrackets  = ['A'=>0,'B'=>20,'C'=>40,'D'=>60,'E'=>80];
         $levelBrackets = [1=>0,2=>100,3=>200,4=>300,5=>400,0=>500];
 
-        $updateQuery = "#Level {$level}-Rank $rank \n\n";
+        $updateQuery .= "#Level {$level}-Rank $rank \n\n";
 
         //CREATES A FILE
         $outputfile = "output/Level{$level}{$rank} Lesson {$lessonStart} - {$lessonEnd}.sql";
@@ -455,13 +456,13 @@
             
             $updateQuery .= "#Lesson {$lessonSearcher}\n";
             $updateQuery .= "UPDATE mst_lesson_html SET content = '{$minifiedEncodedHTML}', css = '{$minifiedCSS}' where rank_id = {$rankId} AND lesson_id = {$lessonID};";
-
+            $updateQuery .= "\n\n";
+     
             if($saveToDB):
-                DB::query($updateQuery);
+                $updateQueryForDB = "UPDATE mst_lesson_html SET content = '{$minifiedEncodedHTML}', css = '{$minifiedCSS}' where rank_id = {$rankId} AND lesson_id = {$lessonID};";
+                DB::query($updateQueryForDB);
             endif;
 
-            $updateQuery .= "\n\n";
-   
         endfor;
 
         fwrite($fp, $updateQuery); 
