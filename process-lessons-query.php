@@ -377,7 +377,7 @@
         $lessonStart     = $_POST['from'];
         $lessonEnd       = $_POST['to'];
         $lessonLocation  = $_POST['directory'];
-        $saveToDB        = $_POST['saveToDB'];
+        $saveToDB        = isset($_POST['saveToDB']) ? $_POST['saveToDB'] : 0;
         $lessonStartOrig = $lessonStart;
         $updateQuery     = "";
 
